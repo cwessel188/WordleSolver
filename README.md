@@ -2,10 +2,6 @@
 A kotlin app that shows how many Wordle words are left based on your guess
 
 
-Example run:
+Example output:
 
-```
-Loaded 2310 words into the list of possible solutions.
-Your guess: t h u m b   // this output is colorful in the terminal. 't' is green and 'u' is yellow.
-6 words left in the wordlist.
-trout tulip tulle tunic tutor torus
+![image](https://github.com/cwessel188/WordleSolver/assets/7342872/405af0b3-270e-4137-ae34-c12d8d31fcb6)
