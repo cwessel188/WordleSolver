@@ -5,5 +5,8 @@ fun main() {
     val wordlist = Solver.loadWordList()
         // wessel.wordlesolver.Solver.solve
 
-    Solver().resolveGuess(wordlist, Solver.createTestGuess())
+    val guess = Solver.createTestGuess()
+    Solver.printGuess(guess)
+    val possibleSolutions = Solver().resolveGuess(wordlist, guess)
+    Solver.printWordList(possibleSolutions)
 }

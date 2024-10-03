@@ -7,21 +7,25 @@ class Solver {
         fun loadWordList(): List<String> {
 
             val wordlist = this::class.java.getResource("/answerslist.txt")
-                .readText().split("\\s+".toRegex())
-            println("Loaded ${wordlist.size} words into the list of possible answers.")
+                ?.readText()?.split("\\s+".toRegex())
+            if (wordlist != null) {
+                println("Loaded ${wordlist.size} words into the list of possible answers.")
+            }
+            else
+                println("Unable to load word list.")
 
-            return wordlist
+            return wordlist ?: emptyList()
         }
 
         fun createTestGuess(): Guess {
             // answer: SCRUB
             return Guess(
                 listOf(
-                    Letter('t', Color.GREY, 0),
-                    Letter('h', Color.GREY, 1),
-                    Letter('u', Color.YELLOW, 2),
-                    Letter('m', Color.GREY, 3),
-                    Letter('b', Color.GREEN, 4),
+                    Letter('m', Color.GREEN, 0),
+                    Letter('r', Color.GREY, 1),
+                    Letter('e', Color.YELLOW, 2),
+                    Letter('m', Color.YELLOW, 3),
+                    Letter('d', Color.YELLOW, 4),
                 )
             )
         }
@@ -40,10 +44,18 @@ class Solver {
                 }
             println("Your guess: $sb")
         }
+
+        fun printWordList(words: List<String>) {
+            println("${words.size} words left in the wordlist.")
+            if (words.size < 35) {
+                for (word in words) {
+                    print("$word ")
+                }
+            }
+        }
     }
 
-    fun resolveGuess(wordlist: List<String>, guess: Guess) {
-        printGuess(guess)
+    fun resolveGuess(wordlist: List<String>, guess: Guess): List<String> {
         var remainingWords = wordlist
 
         // for each letter in the guess,
@@ -56,7 +68,9 @@ class Solver {
                         .filter { it[letter.index] != letter.value }
 
                 Color.GREEN ->
-                    remainingWords.filter { it[letter.index] == letter.value }
+                    remainingWords.filter {
+                        it[letter.index] == letter.value
+                    }
 
                 // if grey, eliminate all words that miss that letter
                 Color.GREY ->
@@ -64,17 +78,6 @@ class Solver {
 
             }
         }
-        // print out remaining possible words
-        printWordList(remainingWords)
+        return remainingWords
     }
-
-    fun printWordList(words: List<String>) {
-        println("${words.size} words left in the wordlist.")
-        if (words.size < 35) {
-            for (word in words) {
-                print("$word ")
-            }
-        }
-    }
-
 }
