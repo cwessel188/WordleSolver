@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import wessel.wordlesolver.Color
 import wessel.wordlesolver.Guess
 import wessel.wordlesolver.Letter
@@ -7,22 +8,98 @@ import org.junit.jupiter.api.Test
 
 class WordleSolverTest {
 
+    private var solver =  Solver()
+    private lateinit var wordlist : List<String>
+
+    @BeforeEach
+    fun init() {
+        wordlist = solver.loadWordList("/testlist.txt")
+    }
+
     @Test
-    fun doubleLetterTest() {
+    fun `green letter position 5`() {
         val guess = Guess(
             listOf(
-                Letter('m', Color.GREEN, 0),
-                Letter('r', Color.GREY, 1),
-                Letter('e', Color.YELLOW, 2),
-                Letter('m', Color.YELLOW, 3),
-                Letter('d', Color.YELLOW, 4),
+                Letter('x', Color.GREY, 0),
+                Letter('x', Color.GREY, 1),
+                Letter('x', Color.GREY, 2),
+                Letter('x', Color.GREY, 3),
+                Letter('a', Color.GREEN, 4),
             )
         )
 
-        val wordlist = Solver.loadWordList()
+        val expected = listOf(
+            "abcda",
+            "ababa",
+        )
 
-        val result = Solver().resolveGuess(wordlist, guess)
+        val result = solver.resolveGuess(wordlist, guess)
 
-        assertEquals(listOf("modem"), result)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `yellow letter position 5`() {
+        val guess = Guess(
+            listOf(
+                Letter('x', Color.GREY, 0),
+                Letter('x', Color.GREY, 1),
+                Letter('x', Color.GREY, 2),
+                Letter('x', Color.GREY, 3),
+                Letter('a', Color.GREEN, 4),
+            )
+        )
+
+        val expected = listOf(
+            "abcde",
+        )
+
+        val result = solver.resolveGuess(wordlist, guess)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `same letter is green then yellow`() {
+        val guess = Guess(
+            listOf(
+                Letter('a', Color.GREEN, 0),
+                Letter('a', Color.YELLOW, 1),
+                Letter('x', Color.GREY, 2),
+                Letter('x', Color.GREY, 3),
+                Letter('x', Color.GREY, 4),
+            )
+        )
+
+        val expected = listOf(
+            "aaaab",
+            "abcda",
+            "ababa",
+        )
+
+        val result = solver.resolveGuess(wordlist, guess)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `same letter is yellow twice`() {
+        val guess = Guess(
+            listOf(
+                Letter('x', Color.GREY, 0),
+                Letter('a', Color.YELLOW, 1),
+                Letter('x', Color.GREY, 2),
+                Letter('a', Color.YELLOW, 3),
+                Letter('x', Color.GREY, 4),
+            )
+        )
+
+        val expected = listOf(
+            "abcda",
+        )
+
+        val result = solver.resolveGuess(wordlist, guess)
+
+        assertEquals(expected, result)
     }
 }
